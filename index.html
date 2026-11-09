@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LUCID</title>
+<meta name="theme-color" content="#0e1412">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>
+  // Opened from the installed app icon: go straight to the board.
+  var BOARD = "https://claude.ai/code/artifact/c030bdd5-52e2-414e-9afe-639863e4e35b";
+  var launched = new URLSearchParams(location.search).has("app") || matchMedia("(display-mode: standalone)").matches;
+  if (launched) location.replace(BOARD);
+</script>
+<style>
+  :root { color-scheme: dark; }
+  html, body { height: 100%; margin: 0; }
+  body { background: radial-gradient(120% 80% at 50% 40%, #1a2420 0%, #0e1412 60%, #090d0c 100%); color: #e8eef7;
+         font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; display: grid; place-items: center;
+         padding: env(safe-area-inset-top) max(16px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(16px, env(safe-area-inset-left)); box-sizing: border-box; }
+  main { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+  img { width: 168px; height: 168px; border-radius: 38px; }
+  h1 { margin: 0; font-size: 22px; letter-spacing: .22em; font-weight: 700; }
+  .row { display: flex; flex-direction: column; gap: 10px; width: min(280px, 100%); }
+  a, button { display: block; min-height: 48px; border-radius: 24px; font: 600 16px system-ui, sans-serif; text-decoration: none; display: grid; place-items: center; cursor: pointer; }
+  button { background: #ffd27a; color: #1c1206; border: 0; }
+  a { color: #ffd27a; border: 1px solid #2a3530; background: #121a17; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <img src="eclipse.png" alt="">
+  <h1>LUCID</h1>
+  <div class="row">
+    <button id="install" hidden>Install on this device</button>
+    <a href="https://claude.ai/code/artifact/c030bdd5-52e2-414e-9afe-639863e4e35b">Open the board</a>
+  </div>
+</main>
+<script>
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+  var deferred = null, btn = document.getElementById("install");
+  addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferred = e; btn.hidden = false; });
+  addEventListener("appinstalled", function () { btn.hidden = true; });
+  btn.addEventListener("click", function () { if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function () { deferred = null; btn.hidden = true; }); });
+</script>
+</body>
+</html>
